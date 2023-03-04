@@ -1,0 +1,59 @@
+import wikipediaScanner                                       // need to find: a way to access data on Wikipedia pages (r0)
+import otherwikiScanner                                       // need to find: a way to access data on Otherwiki pages (r0)
+import scanner
+
+/*
+  roadblock0 (r0): how do we access data from Wikipedia and Otherwiki for our program?
+  roadblock1 (r1): how do we define the parameters of the search? How and where do we start looking?
+*/
+
+boolean  foundAttribute                                       // true/false: scanOtherwiki contains 'WPAN' || 'en-wikipedia-Attribution'
+dict     wordCountsWikipedia                                  // keys: words separated by ' '; entries: count
+dict     wordsCountsOtherwiki                                 // ''
+double   pageSimilarity                                       // percentage score of the similarity between scanWikipedia and scanOtherwiki 
+integer  bytesRead
+integer  totalCharWikipedia                                   // the 'byte length' of the Wikipedia page
+integer  totalCharOtherwiki                                   // the 'byte length' of the Otherwiki page
+list     wordsWikipedia                                       // list of words used at least once on page
+list     wordsOtherwiki                                       // ''
+string   scanWikipedia                                        // content of Wikipedia page
+string   scanOtherwiki                                        // content of Otherwiki page
+string   pageName                                             // page to be queried
+
+/*
+  limitation0 (l0): accuracy of pageSimilarity will likely be poor; but such a metric
+  might at least help us order the large amount of data that would be produced by a
+  full comparison of an Otherwiki with Wikipedia
+  
+  better to have a bad order than no order for a list of 7200 entries right?
+*/
+
+pageSimilarity        = 0.0                                   // initialization
+foundAttribute        = false
+bytesRead             = 0
+pageName              = scanner.nextLine('Input pageName: ')
+
+totalCharWikipedia    = wikipediaScanner.bytes(pageName)
+totalCharOtherwiki    = otherwikiScanner.bytes(pageName)
+scanWikipedia         = wikipediaScanner.contentOf(pageName)
+scanOtherwiki         = otherwikiScanner.contentOf(pageName)  // what do we do when the page names are not the same, but the content is? (r0)
+wordsWikipedia        = wikipediaScanner.listWords(pageName)
+wordsOtherwiki        = otherwikiScanner.listWords(pageName)
+
+for each word in wordsWikipedia                               // processing: initialize count-dictionaries from word-lists
+  wordCountsWikipedia[word] = 0
+
+for each word in wordsOtherwiki
+  wordCountsOtherwiki[word] = 0
+
+while (bytesRead < totalCharWikipedia)                        // processing: count instance of words per page-scan
+  for each word in scanWikipedia
+    if word is in wordsWikipedia
+      wordCountsWikipedia[word] = wordCountsWikipedia[word] + 1
+
+bytesRead = 0
+
+while (byesRead < totalCharOtherwiki)
+  for each word in scanOtherwiki
+    if word is in wordsOtherwiki
+      wordCountsOtherwiki[word] = wordCountsOtherwiki[word] + 1
