@@ -67,7 +67,7 @@ for each word in wordsOtherwiki                               // processing: cru
 pageSimilarity = pageSimilarity / len(wordsOtherwiki)
 return pageSimilarity
 
-if scanOtherwiki.contains("WPAN") == true                     // processing: return foundAttribute
+if scanOtherwiki.contains("WPAN" || "en-wikipedia-Attribution") == true                     // processing: return foundAttribute
   foundAttribute = true
 else
   foundAttribute = false
