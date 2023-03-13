@@ -14,6 +14,7 @@ double   pageSimilarity                                       // percentage scor
 integer  bytesRead
 integer  totalCharWikipedia                                   // the 'byte length' of the Wikipedia page
 integer  totalCharOtherwiki                                   // the 'byte length' of the Otherwiki page
+integer  value                                                // comparison integer
 list     wordsWikipedia                                       // list of words used at least once on page
 list     wordsOtherwiki                                       // ''
 string   scanWikipedia                                        // content of Wikipedia page
@@ -57,3 +58,17 @@ while (byesRead < totalCharOtherwiki)
   for each word in scanOtherwiki
     if word is in wordsOtherwiki
       wordCountsOtherwiki[word] = wordCountsOtherwiki[word] + 1
+
+for each word in wordsOtherwiki                               // processing: crude pageSimilarity
+  value = wordCountsOtherwiki[word]
+    if wordCountsWikipedia[word] = value == true
+      pageSimilarity++
+
+pageSimilarity = pageSimilarity / len(wordsOtherwiki)
+return pageSimilarity
+
+if scanOtherwiki.contains("WPAN") == true                     // processing: return foundAttribute
+  foundAttribute = true
+else
+  foundAttribute = false
+return foundAttribute
